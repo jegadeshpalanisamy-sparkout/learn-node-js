@@ -1,13 +1,15 @@
 
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 
 router.get('/', (req, res) => {
-    res.send('Hello from sample route!');
+    // res.send('Hello from sample route!');
+    res.sendFile(path.join(__dirname,'../views','sample.html'));
 });
 
 router.get('/get-payloads-using-body-parser',(req,res,next)=>{
-    res.send('<form action="/upload-name" method="POST"><input type="text" name="name"><button type="submit">Send</button></form>');
+    res.send('<form action="upload-name" method="POST"><input type="text" name="name"><button type="submit">Send</button></form>');
 })
 
 router.post('/upload-name', (req, res, next) => {
