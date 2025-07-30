@@ -1,11 +1,11 @@
 
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-
+const rootDir = require('../utils/path')
+const path = require('path')
 router.get('/', (req, res) => {
     // res.send('Hello from sample route!');
-    res.sendFile(path.join(__dirname,'../','views','sample.html'));
+    res.sendFile(path.join(rootDir,'views','sample.html'));
 });
 
 router.get('/get-payloads-using-body-parser',(req,res,next)=>{
