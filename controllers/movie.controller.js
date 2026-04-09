@@ -1,25 +1,46 @@
+import movieEvents from '../events/bus.js';
+
 const getMovies = (req, res) => {
-    res.send('Hello from movie route!');
-}
+  res.status(200).json({ message: 'Hello from movie route!' });
+};
 
 const createMovie = (req, res) => {
-    console.log(req.body);
-    res.send('<h1>Product saved!</h1>');
-}
+  const { title } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: 'title is required' });
+  }
+
+  const movie = {
+    id: Date.now().toString(),
+    title,
+    createdAt: new Date().toISOString(),
+  };
+
+  movieEvents.emitMovieCreated(movie);
+  return res.status(201).json({ message: 'Movie saved', movie });
+};
 
 const updateMovie = (req, res) => {
-    console.log(req.body);
-    res.send('<h1>Product updated!</h1>');
-}
+  const { id } = req.params;
+  const updates = req.body;
 
-function  deleteMovie  (req, res)  {
-    console.log(req.body);
-    res.send('<h1>Product deleted!</h1>');
-}
+  const movie = { id, ...updates, updatedAt: new Date().toISOString() };
+  movieEvents.emitMovieUpdated(movie);
 
-module.exports = {
-    getMovies,
-    createMovie,
-    updateMovie,
-    deleteMovie
-}
+  return res.status(200).json({ message: 'Movie updated', movie });
+};
+
+const deleteMovie = (req, res) => {
+  const { id } = req.params;
+
+  movieEvents.emitMovieDeleted({ id });
+  return res.status(200).json({ message: 'Movie deleted', id });
+};
+
+export {
+  getMovies,
+  createMovie,
+  updateMovie,
+  deleteMovie,
+};

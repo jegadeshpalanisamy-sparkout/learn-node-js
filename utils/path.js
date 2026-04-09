@@ -1,5 +1,5 @@
-const path = require('path');
+import path from 'node:path';
 
-const rootDir = path.dirname(require.main.filename);
+const rootDir = path.resolve(process.cwd());
 
-module.exports = rootDir;
+export default rootDir;

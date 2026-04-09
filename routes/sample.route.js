@@ -1,11 +1,11 @@
+import express from 'express';
+import path from 'node:path';
+import rootDir from '../utils/path.js';
 
-const express = require('express');
 const router = express.Router();
-const rootDir = require('../utils/path')
-const path = require('path')
 router.get('/', (req, res) => {
     // res.send('Hello from sample route!');
-    res.sendFile(path.join(rootDir,'views','sample.html'));
+    res.sendFile(path.join(rootDir, 'views', 'sample.html'));
 });
 
 router.get('/get-payloads-using-body-parser',(req,res,next)=>{
@@ -19,7 +19,7 @@ router.post('/upload-name', (req, res, next) => {
 });
 
 router.get('/add-product-form', (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../','views','add-product.html'));
+    res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
 });
 
 router.post('/save-product', (req, res, next) => {
@@ -29,4 +29,4 @@ router.post('/save-product', (req, res, next) => {
 
 
 
-module.exports = router;
+export default router;
