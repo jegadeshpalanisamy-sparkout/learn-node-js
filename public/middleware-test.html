@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Middleware Test Page</title>
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --ink: #1f1b16;
+        --accent: #1b6f5a;
+        --accent-2: #d57b22;
+      }
+      body {
+        margin: 0;
+        font-family: "Georgia", "Times New Roman", serif;
+        background: radial-gradient(circle at 10% 10%, #fffaf0 0%, var(--bg) 55%, #e9e1d3 100%);
+        color: var(--ink);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+      }
+      .card {
+        background: #fffdf8;
+        border: 2px solid #2a241e;
+        box-shadow: 8px 8px 0 #2a241e;
+        padding: 24px;
+        width: min(720px, 92vw);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        letter-spacing: 0.5px;
+      }
+      p {
+        margin: 0 0 16px;
+        line-height: 1.5;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+      button, a.button {
+        display: inline-block;
+        padding: 12px 14px;
+        border: 2px solid #2a241e;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        text-align: center;
+      }
+      button.alt, a.button.alt {
+        background: var(--accent-2);
+      }
+      .note {
+        margin-top: 16px;
+        font-size: 14px;
+      }
+      pre {
+        background: #f0e9dc;
+        padding: 10px;
+        border: 1px solid #2a241e;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Middleware Test Page</h1>
+      <p>Use the buttons below to hit the middleware routes. Watch your terminal for logs.</p>
+
+      <div class="grid">
+        <a class="button" href="/admin/with-middleware">Route Middleware</a>
+        <a class="button" href="/admin/chain">Chained Middleware</a>
+        <a class="button alt" href="/admin/boom">Trigger Error</a>
+      </div>
+
+      <div class="note">
+        Expected logs in terminal:
+        <pre>Global middleware: GET /admin/with-middleware
+Route middleware time: ...</pre>
+      </div>
+    </div>
+  </body>
+</html>
