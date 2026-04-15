@@ -4,7 +4,7 @@ import express from 'express';
 import router from './routes/sample.route.js';
 import moviesRouter from './routes/movie.route.js';
 import { registerMovieListeners } from './listeners/movie.listeners.js';
-
+import bookRouter from './routes/book.route.js';
 const app = express();
 registerMovieListeners();
 
@@ -34,6 +34,10 @@ app.use((err, req, res, next) => {
     console.error('Error middleware:', err.message);
     res.status(500).send('Something broke!');
 });
+
+//book store rest apis
+
+app.use('/books', bookRouter);
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
