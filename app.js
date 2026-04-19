@@ -41,4 +41,36 @@ mongoose.connect(MONGO_URI).then(() => {
   app.listen(3000, () => {
     console.log('Server is running on port 3000');
   });
+}).catch((err) => {
+  console.error('MongoDB connection failed:', err.message);
+  process.exit(1);
 });
+
+//Create mongoose schema 
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+  createdAt: { type: Date, default: Date.now }
+
+});
+// Create mongoose model
+const User = mongoose.model('User', userSchema);
+
+async function runQueryExample() {
+  try {
+    // Create a new user
+    const newUser = new User({ name: 'John Doe', email: 'test@example.com', password: 'password123' });
+    await newUser.save();
+
+    // Find all users
+    const users = await User.find();
+    console.log('All users:', users);
+  } catch (error) {
+    console.error('Error:', error.message);
+  } finally {   
+     mongoose.connection.close();
+  }
+}
+
+runQueryExample();
