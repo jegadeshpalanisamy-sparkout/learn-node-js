@@ -77,23 +77,32 @@ async function runQueryExample() {
     // const users = await User.find();
     // console.log('All users:', users ,'total users:', users.length);
 
-    const oneUser = await User.findOne({ name: 'Alice' });
-    console.log(oneUser);
+    // const oneUser = await User.findOne({ name: 'Alice' });
+    // console.log(oneUser);
 
-    const findByIdUser = await User.findById('69f0e41077a25da4ffee8e18');
-    console.log(findByIdUser);
+    // const findByIdUser = await User.findById('69f0e41077a25da4ffee8e18');
+    // console.log(findByIdUser);
 
-    const users = await User.find().select('name email - _id -password');
-    console.log(users);
+    // const users = await User.find().select('name email - _id -password');
+    // console.log(users);
 
-    // Only first 2 users.
-    const usersLimit = await User.find().limit(2);
+    // // Only first 2 users.
+    // const usersLimit = await User.find().limit(2);
 
-    //Skip first 2, get next 2.
-    const usersSkip = await User.find().skip(2).limit(2);
+    // //Skip first 2, get next 2.
+    // const usersSkip = await User.find().skip(2).limit(2);
 
-      console.log('Users with limit:', usersLimit);
-      console.log('Users with skip:', usersSkip);
+    //   console.log('Users with limit:', usersLimit);
+    //   console.log('Users with skip:', usersSkip);
+
+
+
+    // Queries
+    console.log('All:', await User.find());
+    console.log('FindOne:', await User.findOne({ name: 'Alice' }));
+    console.log('Select:', await User.find().select('name email'));
+    console.log('Sorted:', await User.find().sort({ name: -1 }));
+    console.log('Pagination:', await User.find().skip(1).limit(2));
 
   } catch (error) {
     console.error('Error:', error.message);
