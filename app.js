@@ -61,11 +61,40 @@ async function runQueryExample() {
   try {
     // Create a new user
     const newUser = new User({ name: 'John Doe', email: 'test@example.com', password: 'password123' });
+    
     await newUser.save();
 
+    const usersData = [
+      { name: 'John',  email: 'john@test.com',  password: '123' },
+      { name: 'Alice', email: 'alice@test.com', password: '122' },
+      { name: 'Bob',   email: 'bob@test.com',   password: '124' },
+      { name: 'David', email: 'david@test.com', password: '126' },
+    ];
+
+    await User.insertMany(usersData);
+    console.log('Multiple users inserted');
     // Find all users
-    const users = await User.find();
-    console.log('All users:', users);
+    // const users = await User.find();
+    // console.log('All users:', users ,'total users:', users.length);
+
+    const oneUser = await User.findOne({ name: 'Alice' });
+    console.log(oneUser);
+
+    const findByIdUser = await User.findById('69f0e41077a25da4ffee8e18');
+    console.log(findByIdUser);
+
+    const users = await User.find().select('name email - _id -password');
+    console.log(users);
+
+    // Only first 2 users.
+    const usersLimit = await User.find().limit(2);
+
+    //Skip first 2, get next 2.
+    const usersSkip = await User.find().skip(2).limit(2);
+
+      console.log('Users with limit:', usersLimit);
+      console.log('Users with skip:', usersSkip);
+
   } catch (error) {
     console.error('Error:', error.message);
   } finally {   
