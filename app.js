@@ -40,6 +40,7 @@ mongoose.connect(MONGO_URI).then(() => {
 
   app.listen(3000, () => {
     console.log('Server is running on port 3000');
+    runQueryExample();
   });
 }).catch((err) => {
   console.error('MongoDB connection failed:', err.message);
@@ -64,15 +65,15 @@ async function runQueryExample() {
     
     await newUser.save();
 
-    const usersData = [
-      { name: 'John',  email: 'john@test.com',  password: '123' },
-      { name: 'Alice', email: 'alice@test.com', password: '122' },
-      { name: 'Bob',   email: 'bob@test.com',   password: '124' },
-      { name: 'David', email: 'david@test.com', password: '126' },
-    ];
+    // const usersData = [
+    //   { name: 'John',  email: 'john@test.com',  password: '123' },
+    //   { name: 'Alice', email: 'alice@test.com', password: '122' },
+    //   { name: 'Bob',   email: 'bob@test.com',   password: '124' },
+    //   { name: 'David', email: 'david@test.com', password: '126' },
+    // ];
 
-    await User.insertMany(usersData);
-    console.log('Multiple users inserted');
+    // await User.insertMany(usersData);
+    // console.log('Multiple users inserted');
     // Find all users
     // const users = await User.find();
     // console.log('All users:', users ,'total users:', users.length);
@@ -97,12 +98,28 @@ async function runQueryExample() {
 
 
 
-    // Queries
-    console.log('All:', await User.find());
-    console.log('FindOne:', await User.findOne({ name: 'Alice' }));
-    console.log('Select:', await User.find().select('name email'));
-    console.log('Sorted:', await User.find().sort({ name: -1 }));
-    console.log('Pagination:', await User.find().skip(1).limit(2));
+    // // Queries
+    // console.log('All:', await User.find());
+    // console.log('FindOne:', await User.findOne({ name: 'Alice' }));    
+    // console.log('Select:', await User.find().select('name email'));
+    // console.log('Sorted:', await User.find().sort({ name: -1 }));
+    // console.log('Pagination:', await User.find().skip(1).limit(2));
+
+
+    //delete logics
+    const deleteUser = await User.deleteOne({ name: 'Bob' });
+    console.log('Delete result:', deleteUser);
+
+    const deleteById = await User.findByIdAndDelete('69f0e41077a25da4ffee8e18');
+    console.log('Delete by ID result:', deleteById);
+
+
+    //update logics
+    const updateUser = await User.updateOne({ name: 'Alice' }, { $set: { email: 'alice2@test.com' } });
+    console.log('Update result:', updateUser);
+
+    const updateById = await User.findByIdAndUpdate('69f0e41077a25da4ffee8e18', { $set: { email:'alice3@test.com' } });
+    console.log('Update by ID result:', updateById);
 
   } catch (error) {
     console.error('Error:', error.message);
@@ -111,4 +128,3 @@ async function runQueryExample() {
   }
 }
 
-runQueryExample();
