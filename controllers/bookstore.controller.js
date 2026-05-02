@@ -1,84 +1,116 @@
-const books = [
-    {
-        id: 1,
-        name: 'book 1'
-    },
-    {
-        id: 2,
-        name: 'book 2'
-    }
-]
+import { Book } from "../models/book.js";
 
-const getBooks = (req, res) => {
-    console.log('**************',req);
-    res.status(200).json({ message: 'Hello from book route!', books });
+const getBooks = async(req, res) => {
+    try {
+        const books = await Book.find();
+        if(books.length === 0) {
+            return res.status(200).json({ 
+                success: true,
+                message: 'No books found', 
+                data: [] 
+            });
+        } else {
+            return res.status(200).json({ 
+                success: true,
+                message: 'Books retrieved', 
+                data: books 
+            });
+        }
+    } catch (err) {
+        console.error('Error retrieving books:', err.message);
+        return res.status(500).json({ error: 'Failed to retrieve books' });
+    }
+  
 };
 
 
-const getBookById = (req, res) => {
-    const { id } = req.params;
-    const bookId = Number(id);
+const getBookById = async(req, res) => {
+   try {
+         const { id } = req.params;
+         const book = await Book.findById(id);
+         if (book) {
+             return res.status(200).json({ 
+                 success: true,
+                 message: 'Book retrieved', 
+                 data: book 
+             });
+         }
+         return res.status(404).json({ error: 'Book not found' });
 
-    if (Number.isNaN(bookId)) {
-        return res.status(400).json({ error: 'Invalid book id' });
-    }
-
-    const foundBook = books.find(b => b.id === bookId);
-    if (!foundBook) {
-        return res.status(404).json({ error: 'Book not found' });
-    }
-    return res.status(200).json({ message: 'Book found', book: foundBook });
+   } catch(err) {
+       console.error('Error retrieving book:', err.message);
+       return res.status(500).json({ error: 'Failed to retrieve book' });
+   }
 }
 
-const createBook = (req,res) => {
-    console.log(req.body);
-    const bookDetail = req.body;
-    if(!bookDetail.name){
-     return res.status(400).json({ error: 'Book name is required' });
+const createBook = async(req,res) => {
+    try {
+        console.log(req.body);
+        const bookDetail = req.body;
+        const newBook = await Book.create(bookDetail);
+        if (newBook) {
+            return res.status(201).json({ 
+                success: true,
+                message: 'Book created', 
+                data: newBook 
+            });
+        }
+        return res.status(400).json({ error: 'Failed to create book' });
+    } catch (err) {
+        console.error('Error creating book:', err.message);
+        if (err?.name === 'StrictModeError') {
+            return res.status(400).json({ error: err.message });
+        }
+        if (err?.name === 'ValidationError') {
+            return res.status(400).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Failed to create book' });
     }
-    bookDetail.id = books.length + 1;
-    console.log(books);
-    books.push(bookDetail);
-    res.status(201).json({ message: 'Book created', book: bookDetail });    
-}
-
-
-const updateBook = (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-
-    const bookId = Number(id);
-    if (Number.isNaN(bookId)) {
-        return res.status(400).json({ error: 'Invalid book id' });
-    }
-
-    const bookIndex = books.findIndex(b => b.id === bookId);
-    if (bookIndex === -1) {
-        return res.status(404).json({ error: 'Book not found' });
-    }
-
-    const updatedBook = { ...books[bookIndex], ...updates, updatedAt: new Date().toISOString() };
-    books[bookIndex] = updatedBook;
-
-    return res.status(200).json({ message: 'Book updated', book: updatedBook });
+       
 }
 
 
-const deleteBook = (req, res) => {
-    const { id } = req.params;
-
-    const bookId = Number(id);
-    if (Number.isNaN(bookId)) {
-        return res.status(400).json({ error: 'Invalid book id' });
-    }
-
-    const bookIndex = books.findIndex(b => b.id === bookId);
-    if (bookIndex === -1) {
+const updateBook = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+        const updatedBook = await Book.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+        if (updatedBook) {
+            return res.status(200).json({ 
+                success: true,
+                message: 'Book updated', 
+                data: updatedBook 
+            });
+        }
         return res.status(404).json({ error: 'Book not found' });
+    } catch (err) {
+        console.error('Error updating book:', err.message);
+        if (err?.name === 'ValidationError') {
+            return res.status(400).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Failed to update book' });
     }
+   
+}
 
-    books.splice(bookIndex, 1);
-    return res.status(200).json({ message: 'Book deleted', id: bookId });
+
+const deleteBook = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedBook = await Book.findByIdAndDelete(id);
+        if (deletedBook) {
+            return res.status(200).json({ 
+                success: true,
+                message: 'Book deleted', 
+                data: deletedBook 
+            });
+        }
+        return res.status(404).json({ error: 'Book not found' });
+    } catch (err) {
+        console.error('Error deleting book:', err.message);
+        return res.status(500).json({ error: 'Failed to delete book' });
+    }
+   
 }
 
 export { getBooks, getBookById, createBook, updateBook, deleteBook };
