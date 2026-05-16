@@ -2,7 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './database/db.js';
 import bookRouter from './routes/book.route.js';
-
+import authRouter from './routes/auth.routes.js';
+import homeRouter from './routes/home.route.js';
 dotenv.config();
 // import mongoose from 'mongoose';
 // import adminRouter from './routes/sample.route.js';
@@ -15,7 +16,8 @@ const PORT = process.env.PORT || 3000;
 // app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/api/books', bookRouter);
-
+app.use('/api/auth', authRouter);
+app.use('/api/home', homeRouter);
 app.get('/', (req, res) => {
   res.status(200).send('server is up and running');
 });
