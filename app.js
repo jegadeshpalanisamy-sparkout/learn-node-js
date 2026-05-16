@@ -1,15 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { connectDB } from './database/db.js';
 import bookRouter from './routes/book.route.js';
 import authRouter from './routes/auth.routes.js';
 import homeRouter from './routes/home.route.js';
 dotenv.config();
-// import mongoose from 'mongoose';
-// import adminRouter from './routes/sample.route.js';
-// import moviesRouter from './routes/movie.route.js';
 
 const app = express();
+app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
 
 // // Middlewares
